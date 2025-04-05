@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Visualization</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        canvas {
+            border: 1px solid #ccc;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Monthly Sales Data</h1>
+    <canvas id="myChart" width="500" height="500"></canvas>
+    
+    <script>
+        const data = {
+            sales: [
+                {"month": "Jan", "value": 120},
+                {"month": "Feb", "value": 150},
+                {"month": "Mar", "value": 180},
+                {"month": "Apr", "value": 90},
+                {"month": "May", "value": 200},
+                {"month": "Jun", "value": 170},
+                {"month": "Jul", "value": 130},
+                {"month": "Aug", "value": 160},
+                {"month": "Sep", "value": 140},
+                {"month": "Oct", "value": 190}
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('myChart');
+            const ctx = canvas.getContext('2d');
+
+            const salesData = data.sales;
+            const barWidth = 40;
+            const spacing = 10;
+            const maxValue = Math.max(...salesData.map(item => item.value));
+            const scale = 400 / maxValue;
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.moveTo(50, 450);
+            ctx.lineTo(450, 450);
+            ctx.moveTo(50, 50);
+            ctx.lineTo(50, 450);
+            ctx.stroke();
+
+            salesData.forEach((item, index) => {
+                const x = 50 + (barWidth + spacing) * index;
+                const height = item.value * scale;
+                const y = 450 - height;
+
+                ctx.fillStyle = `hsl(${index * 30}, 70%, 50%)`;
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.fillRect(x, y, barWidth, height);
+                ctx.strokeRect(x, y, barWidth, height);
+
+                ctx.fillStyle = '#000';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(item.month, x + barWidth/2, 465);
+                ctx.fillText(item.value, x + barWidth/2, y - 5);
+            });
+
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#000';
+            ctx.textAlign = 'center';
+            ctx.fillText('Months', 250, 490);
+
+            ctx.save();
+            ctx.translate(15, 250);
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText('Sales Value', 0, 0);
+            ctx.restore();
+        });
+    </script>
+</body>
+</html>
